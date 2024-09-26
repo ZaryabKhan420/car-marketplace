@@ -37,13 +37,6 @@ const AddListing = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(triggerUploadImages);
-    if (triggerUploadImages) {
-      console.log(triggerUploadImages);
-    }
-  }, [triggerUploadImages]);
-
   const handleFeaturesInput = (name, value) => {
     setFeaturesData((prevValue) => {
       return {

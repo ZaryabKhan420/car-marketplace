@@ -31,7 +31,6 @@ const UploadImages = ({ triggerUploadImages, setLoader, carInfo, mode }) => {
   }, [carInfo, mode]);
 
   useEffect(() => {
-    console.log(triggerUploadImages);
     if (triggerUploadImages) {
       uploadImages();
     }
