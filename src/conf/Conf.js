@@ -1,0 +1,11 @@
+export const Conf = {
+  VITE_CLERK_PUBLISHABLE_KEY: String(
+    import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+  ),
+  VITE_DRIZZLE_DATABASE_URL: String(import.meta.env.VITE_DRIZZLE_DATABASE_URL),
+  VITE_FIREBASE_API_KEY: String(import.meta.env.VITE_FIREBASE_API_KEY),
+  VITE_SENDBIRD_APPLICATION_ID: String(
+    import.meta.env.VITE_SENDBIRD_APPLICATION_ID
+  ),
+  VITE_SENDBIRD_API_TOKEN: String(import.meta.env.VITE_SENDBIRD_API_TOKEN),
+};
