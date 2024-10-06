@@ -18,7 +18,7 @@ const CarItem = ({ car }) => {
       </h2>
       <div className="w-full h-[200px] bg-black rounded-t-xl">
         <img
-          src={car.images[0]?.imageUrl}
+          src={car?.images[0]?.imageUrl}
           alt={car.listingTitle}
           loading="lazy"
           className="rounded-t-xl w-full h-full object-cover"

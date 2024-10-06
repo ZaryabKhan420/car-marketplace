@@ -24,7 +24,7 @@ const AddListing = () => {
   const [loader, setLoader] = useState(false);
   const [listingDetails, setListingDetails] = useState({});
   const [searchParams] = useSearchParams();
-  const [triggerUploadImages, setTriggerUploadImages] = useState(0);
+  const uploadImagesRef = useRef(null);
 
   const userData = useUser();
   const mode = searchParams.get("mode");
@@ -75,7 +75,7 @@ const AddListing = () => {
           .returning({ id: carListing.id });
         setLoader(false);
         if (result) {
-          setTriggerUploadImages(Number(result[0].id));
+          uploadImagesRef.current.triggerUpload(result[0].id);
         }
         navigate("/profile");
       } catch (error) {
@@ -93,7 +93,7 @@ const AddListing = () => {
           })
           .returning({ id: carListing.id });
         if (result) {
-          setTriggerUploadImages(Number(result[0].id));
+          uploadImagesRef.current.triggerUpload(result[0].id);
         }
         navigate("/profile");
       } catch (error) {
@@ -188,7 +188,7 @@ const AddListing = () => {
         </div>
         <UploadImages
           carInfo={listingDetails}
-          triggerUploadImages={triggerUploadImages}
+          ref={uploadImagesRef}
           setLoader={setLoader}
           mode={mode}
         />

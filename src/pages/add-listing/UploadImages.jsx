@@ -1,15 +1,27 @@
+import { forwardRef, useImperativeHandle } from "react";
 import { db } from "../../../configs/index";
 import { carImages } from "../../../configs/schema";
 import { storage } from "../../../configs/firebaseConfig";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  ref as firebaseRef,
+  uploadBytes,
+} from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { eq } from "drizzle-orm";
-const UploadImages = ({ triggerUploadImages, setLoader, carInfo, mode }) => {
+const UploadImages = ({ setLoader, carInfo, mode }, ref) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [editCarImagesList, setEditCarImagesList] = useState([]);
   const navigate = useNavigate();
+
+  useImperativeHandle(ref, () => ({
+    triggerUpload(carListingId) {
+      // This method will be called from the parent component
+      uploadImages(carListingId);
+    },
+  }));
 
   const handleSelectedImages = (event) => {
     const files = event.target.files;
@@ -30,20 +42,13 @@ const UploadImages = ({ triggerUploadImages, setLoader, carInfo, mode }) => {
     }
   }, [carInfo, mode]);
 
-  useEffect(() => {
-    if (triggerUploadImages) {
-      uploadImages();
-    }
-  }, [triggerUploadImages]);
-
-  const uploadImages = async () => {
-    console.log("Inside Function");
+  const uploadImages = async (carListingId) => {
     if (mode === "edit") {
       setSelectedImages(editCarImagesList);
     }
-    await selectedImages.forEach(async (image) => {
+    selectedImages.forEach(async (image) => {
       const fileName = Date.now() + Math.random() * 10 + ".jpeg";
-      const storageRef = ref(storage, "car-marketplace/" + fileName);
+      const storageRef = firebaseRef(storage, "car-marketplace/" + fileName);
       const metaData = {
         contentType: "image/jpeg",
       };
@@ -55,7 +60,7 @@ const UploadImages = ({ triggerUploadImages, setLoader, carInfo, mode }) => {
           getDownloadURL(storageRef).then(async (downloadUrl) => {
             const result = await db.insert(carImages).values({
               imageUrl: downloadUrl,
-              carListingId: triggerUploadImages,
+              carListingId: carListingId,
             });
             if (result) {
               setLoader(false);
@@ -63,6 +68,7 @@ const UploadImages = ({ triggerUploadImages, setLoader, carInfo, mode }) => {
           });
         });
     });
+    setLoader(false);
   };
 
   const removeImage = (image) => {
@@ -148,4 +154,4 @@ const UploadImages = ({ triggerUploadImages, setLoader, carInfo, mode }) => {
   );
 };
 
-export default UploadImages;
+export default forwardRef(UploadImages);
